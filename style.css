@@ -1,0 +1,276 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 18px 16px 28px;
+  font-family: Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  background-color: #f5f3ef;
+  background-image: radial-gradient(#d9d4cc 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* 전체 navbar */
+.navbar {
+  position: relative;
+  width: 100%;
+  max-width: 2048px;
+  height: 150px;
+  margin: 0 auto;
+}
+
+/* 아래 검정 그림자 */
+.navbar__shadow {
+  position: absolute;
+  top: 14px;
+  left: 12px;
+  right: -12px;
+  bottom: -14px;
+  background-color: #222326;
+  border-radius: 38px;
+  z-index: 1;
+}
+
+/* 실제 상단 바 */
+.navbar__inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  background-color: #f8f8f8;
+  border: 4px solid #2f2f2f;
+  border-radius: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 42px 0 44px;
+}
+
+/* 왼쪽 로고 */
+.navbar__left {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  color: #2f2f2f;
+}
+
+.navbar__logo-box {
+  width: 82px;
+  height: 82px;
+  border: 4px solid #2f2f2f;
+  border-radius: 22px;
+  background-color: #ff6c3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.navbar__logo-text {
+  font-size: 64px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+/* 오른쪽 큰 영역 */
+.navbar__right {
+  display: flex;
+  align-items: center;
+  gap: 46px;
+}
+
+/* 메뉴 */
+.navbar__menu {
+  display: flex;
+  align-items: center;
+  gap: 56px;
+}
+
+.navbar__menu-item {
+  color: #8f8f8f;
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.navbar__menu-item--highlight {
+  color: #ff6c3d;
+}
+.navbar__menu-item--active {
+  color: #ff6c3d;
+}
+/* 언어 스위치 - 바깥 pill */
+.navbar__lang-switch {
+  height: 88px;
+  padding: 8px 10px 8px 26px;
+  border: 4px solid #2f2f2f;
+  border-radius: 999px;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.navbar__lang-label {
+  color: #8f8f8f;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  margin-right: 2px;
+}
+
+/* KO / EN 공통 */
+.navbar__lang-option {
+  min-width: 88px;
+  height: 56px;
+  padding: 0 22px;
+  border: 4px solid #2f2f2f;
+  border-radius: 999px;
+  background-color: #ffffff;
+  color: #7c7c7c;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* 활성화 */
+.navbar__lang-option--active {
+  background-color: #ff6c3d;
+  color: #ffffff;
+}
+
+/* hover 살짝 */
+.navbar__lang-option:hover,
+.navbar__menu-item:hover,
+.navbar__brand:hover {
+  opacity: 0.9;
+}
+
+
+/* 반응형 */
+@media (max-width: 1400px) {
+  .navbar {
+    height: 132px;
+  }
+
+  .navbar__inner {
+    padding: 0 32px;
+  }
+
+  .navbar__logo-box {
+    width: 72px;
+    height: 72px;
+    font-size: 36px;
+  }
+
+  .navbar__logo-text {
+    font-size: 52px;
+  }
+
+  .navbar__menu {
+    gap: 36px;
+  }
+
+  .navbar__menu-item {
+    font-size: 28px;
+  }
+
+  .navbar__lang-switch {
+    height: 80px;
+    padding-left: 20px;
+  }
+}
+
+@media (max-width: 1040px) {
+  .navbar__menu-item:first-child {
+    display: none;
+  }
+
+  .navbar__lang-label {
+    display: none;
+  }
+
+  .navbar__right {
+    gap: 22px;
+  }
+
+  .navbar__menu {
+    gap: 18px;
+  }
+}
+
+@media (max-width: 760px) {
+  body {
+    padding: 14px;
+  }
+
+  .navbar {
+    height: 104px;
+  }
+
+  .navbar__shadow {
+    top: 10px;
+    left: 8px;
+    right: -8px;
+    bottom: -10px;
+    border-radius: 28px;
+  }
+
+  .navbar__inner {
+    border-radius: 28px;
+    padding: 0 18px;
+  }
+
+  .navbar__brand {
+    gap: 14px;
+  }
+
+  .navbar__logo-box {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    font-size: 28px;
+  }
+
+  .navbar__logo-text {
+    font-size: 36px;
+  }
+
+  .navbar__menu {
+    display: none;
+  }
+
+  .navbar__lang-switch {
+    height: 60px;
+    padding: 5px 6px;
+    gap: 8px;
+  }
+
+  .navbar__lang-option {
+    min-width: 64px;
+    height: 42px;
+    padding: 0 14px;
+    font-size: 16px;
+    border-width: 3px;
+  }
+}

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aido Navbar</title>
+  <title>Aido Navbar EN</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -20,28 +20,30 @@
 
       <div class="navbar__right">
         <nav class="navbar__menu">
-          <a href="#" class="navbar__menu-item navbar__menu-item--active">고양이 친구들</a>
-          <a href="#" class="navbar__menu-item">출시 알람 받기</a>
+          <a href="#" class="navbar__menu-item navbar__menu-item--active">Cat Friends</a>
+          <a href="#" class="navbar__menu-item">Get Notified</a>
         </nav>
 
         <div class="navbar__lang-switch">
-          <span class="navbar__lang-label">언어</span>
-          <a href="index.html" class="navbar__lang-option navbar__lang-option--active">KO</a>
-          <a href="index-en.html" class="navbar__lang-option">EN</a>
+          <span class="navbar__lang-label">Language</span>
+          <a href="index.html" class="navbar__lang-option">KO</a>
+          <a href="index-en.html" class="navbar__lang-option navbar__lang-option--active">EN</a>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- ✅ 메뉴 active 변경 JS -->
   <script>
     const menuItems = document.querySelectorAll('.navbar__menu-item');
 
-    menuItems.forEach(item => {
+    menuItems.forEach((item) => {
       item.addEventListener('click', (e) => {
-        e.preventDefault(); // 페이지 이동 막기
+        e.preventDefault();
 
-        menuItems.forEach(i => i.classList.remove('navbar__menu-item--active'));
+        menuItems.forEach((menu) => {
+          menu.classList.remove('navbar__menu-item--active');
+        });
+
         item.classList.add('navbar__menu-item--active');
       });
     });
