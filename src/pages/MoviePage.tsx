@@ -1,49 +1,90 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import type { Movie, MovieResponse } from '../types/movie';
 import MovieCard from '../components/MovieCard';
+import { LoadingSpinner } from '../components/LoadingSpinner';
 
 export default function MoviePage() {
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  
+  const [isPending, setIsPending] = useState(false);
+
+  const [isError, setIsError] = useState(false);
+
+  const [page, setPage] = useState(1);
+
+  const { category = 'popular' } = useParams<{ category: string }>();
 
   useEffect(() => {
     const fetchMovies = async () => {
-      try {
-        // 방법 1: 가장 안전한 api_key 파라미터 전달 방식 사용
-        const response = await axios.get<MovieResponse>(
-          `https://api.themoviedb.org/3/movie/popular`,
-          {
-            params: {
-              api_key: import.meta.env.VITE_TMDB_KEY, // .env에 저장된 키
-              language: 'ko-KR',
-              page: 2,
-            },
-          }
-        );
+      setIsPending(true);
+      setIsError(false); 
 
-        console.log("🎬 불러온 영화 데이터:", response.data);
-        setMovies(response.data.results);
+      try {
+        const { data } = await axios.get<MovieResponse>(
+        `https://api.themoviedb.org/3/movie/${category}`,
+        {
+          params: {
+            api_key: import.meta.env.VITE_TMDB_KEY,
+            language: 'ko-KR',
+            page: page,
+          },
+        }
+  );
+
+        setMovies(data.results);
       } catch (error) {
-        console.error("❌ 데이터 로드 실패:", error);
+        setIsError(true);
       } finally {
-        setLoading(false);
+        setIsPending(false);
       }
     };
 
-    fetchMovies();
-  }, []);
+    if (category) {
+      fetchMovies();
+    }
+  }, [page, category]); 
 
-  if (loading) return <div className="text-white text-center p-20">영화 데이터를 불러오는 중...</div>;
+  if (isError) {
+    return (
+      <div className='p-10 flex justify-center items-center h-64'>
+        <span className='text-red-500 text-2xl font-bold'>에러가 발생했습니다.</span>
+      </div>
+    );
+  }
 
   return (
-    <div className='p-10 grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 bg-black min-h-screen'>
-      {movies.length > 0 ? (
-        movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))
+    <div className='p-10'>
+      {isPending ? (
+        <div className='flex justify-center items-center h-64'>
+          <LoadingSpinner />
+        </div>
       ) : (
-        <div className="text-white text-center col-span-full">표시할 영화가 없습니다. API 키를 확인해주세요.</div>
+        <>
+          <div className='grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
+            {movies.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))}
+          </div>
+
+          <div className='flex items-center justify-center gap-6 mt-10'>
+            <button
+              className='bg-[#dda5e3] text-white px-6 py-3 rounded-lg shadow-md hover:bg-[#b2dab1] transition-all duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed'
+              onClick={() => setPage((prev) => prev - 1)}
+              disabled={page === 1} 
+            >
+              이전
+            </button>
+            <span className='font-bold text-xl text-gray-700'>{page}</span>
+            <button
+              className='bg-[#dda5e3] text-white px-6 py-3 rounded-lg shadow-md hover:bg-[#b2dab1] transition-all duration-200 disabled:bg-gray-300'
+              onClick={() => setPage((prev) => prev + 1)}
+            >
+              다음
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
