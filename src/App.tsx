@@ -5,12 +5,13 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import LoginSuccessPage from './pages/LoginSuccessPage';
 import SignupPage from './pages/SignupPage';
+import GoogleLoginRedirectPage from './pages/GoogleLoginRedirectPage';
 import { AuthProvider } from './context/AuthContext';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomeLayout />, 
+    element: <HomeLayout />,
     children: [
       {
         path: '/',
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: '/signup',
         element: <SignupPage />,
+      },
+      {
+        path: '/google-callback',
+        element: <GoogleLoginRedirectPage />,
       },
       {
         element: <ProtectedLayout />, 

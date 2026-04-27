@@ -1,4 +1,4 @@
-import axios, { InternalAxiosRequestConfig, AxiosError } from 'axios';
+import axios, { type InternalAxiosRequestConfig, type AxiosError } from 'axios';
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '../constants/key';
 
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
@@ -7,6 +7,7 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 
 export const axiosInstance = axios.create({
   baseURL: 'http://localhost:8000/v1',
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },

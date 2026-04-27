@@ -9,6 +9,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  
   const { login, accessToken } = useAuth();
   const [, setUserName] = useLocalStorage<string | null>('userName', null);
 
@@ -34,7 +35,6 @@ export default function LoginPage() {
 
       const from = (location.state as any)?.location?.pathname || '/login-success';
       navigate(from, { replace: true });
-      
     } catch (error) {
       console.error(error);
       alert('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
@@ -52,7 +52,13 @@ export default function LoginPage() {
           <div className="w-8"></div>
         </div>
 
-        <button className="w-full border border-gray-600 rounded-lg py-3 flex items-center justify-center gap-2 hover:bg-gray-800 transition-colors mb-6">
+        <button 
+          type="button"
+          onClick={() => {
+            window.location.href = 'http://localhost:8000/v1/auth/google/login';
+          }}
+          className="w-full border border-gray-600 rounded-lg py-3 flex items-center justify-center gap-2 hover:bg-gray-800 transition-colors mb-6"
+        >
           <span className="text-lg font-bold text-blue-500">G</span>
           <span className="text-sm">구글 로그인</span>
         </button>
