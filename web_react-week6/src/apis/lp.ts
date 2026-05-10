@@ -1,11 +1,13 @@
 // src/apis/lp.ts
 import { axiosInstance } from './axios';
-import type { 
-  PaginationDto, 
-  RequestLpDto, 
-  ApiResponse, 
-  LpListResponse, 
-  LpDetail 
+import type {
+  PaginationDto,
+  RequestLpDto,
+  ApiResponse,
+  LpListResponse,
+  LpDetail,
+  Comment,
+  CommentListResponse,
 } from '../types/lp';
 
 // 1. LP 목록 조회
@@ -62,4 +64,22 @@ export const patchLp = async (lpId: number, data: RequestLpDto) => {
 export const deleteLp = async (lpId: number) => {
   const response = await axiosInstance.delete<ApiResponse<boolean>>(`/lps/${lpId}`);
   return response.data;
+};
+
+// 9. 댓글 목록 조회 (커서 기반 페이지네이션)
+export const getLpComments = async (lpId: number, params: PaginationDto) => {
+  const response = await axiosInstance.get<ApiResponse<CommentListResponse>>(
+    `/lps/${lpId}/comments`,
+    { params }
+  );
+  return response.data.data;
+};
+
+// 10. 댓글 작성
+export const postLpComment = async (lpId: number, content: string) => {
+  const response = await axiosInstance.post<ApiResponse<Comment>>(
+    `/lps/${lpId}/comments`,
+    { content }
+  );
+  return response.data.data;
 };

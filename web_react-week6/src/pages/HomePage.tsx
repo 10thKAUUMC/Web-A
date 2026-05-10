@@ -1,20 +1,53 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useGetLpList from '../hooks/queries/useGetLpList';
-import LpCard from '../components/LpCard';
+import LpCard, { LpCardSkeleton } from '../components/LpCard';
 import { type Lp } from '../types/lp';
 import { useAuth } from '../context/AuthContext';
 
-const LpSkeleton = () => (
-  <div className="aspect-square bg-[#1f1f22] animate-pulse rounded" />
+const SKELETON_COUNT_INITIAL = 10;
+const SKELETON_COUNT_NEXT = 5;
+
+const SkeletonGrid = ({ count }: { count: number }) => (
+  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+    {Array.from({ length: count }).map((_, i) => (
+      <LpCardSkeleton key={i} />
+    ))}
+  </div>
 );
 
 export default function HomePage() {
-  const [order, setOrder] = useState<'desc' | 'asc'>('desc');
+  const [sort, setSort] = useState<'desc' | 'asc'>('desc');
   const { accessToken } = useAuth();
   const navigate = useNavigate();
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
-  const { data, isPending, isFetching, isError, refetch } = useGetLpList(order);
+  const {
+    data,
+    isLoading,
+    isFetchingNextPage,
+    isError,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+  } = useGetLpList(sort);
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   if (!accessToken) {
     return (
@@ -30,28 +63,27 @@ export default function HomePage() {
     );
   }
 
-  const isInitialLoading = isPending && isFetching;
-  const lps: Lp[] = data?.data ?? [];
+  const lps: Lp[] = data?.pages.flatMap((page) => page.data) ?? [];
 
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto">
 
-      {/* 정렬 버튼: 항상 표시 */}
+      {/* 정렬 버튼 */}
       <div className="flex justify-end px-2">
         <div className="flex border border-gray-600 rounded text-sm font-bold overflow-hidden">
           <button
-            onClick={() => setOrder('asc')}
+            onClick={() => setSort('asc')}
             className={`px-4 py-1.5 transition-colors ${
-              order === 'asc' ? 'bg-white text-black' : 'bg-black text-white hover:bg-gray-800'
+              sort === 'asc' ? 'bg-white text-black' : 'bg-black text-white hover:bg-gray-800'
             }`}
           >
             오래된순
           </button>
           <div className="w-px bg-gray-600" />
           <button
-            onClick={() => setOrder('desc')}
+            onClick={() => setSort('desc')}
             className={`px-4 py-1.5 transition-colors ${
-              order === 'desc' ? 'bg-white text-black' : 'bg-black text-white hover:bg-gray-800'
+              sort === 'desc' ? 'bg-white text-black' : 'bg-black text-white hover:bg-gray-800'
             }`}
           >
             최신순
@@ -59,17 +91,11 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 초기 로딩: 스켈레톤 */}
-      {isInitialLoading && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
-          {Array.from({ length: 10 }).map((_, i) => (
-            <LpSkeleton key={i} />
-          ))}
-        </div>
-      )}
+      {/* 초기 로딩: 상단 스켈레톤 */}
+      {isLoading && <SkeletonGrid count={SKELETON_COUNT_INITIAL} />}
 
-      {/* 에러: 정렬 버튼은 유지, 그리드 영역만 에러 표시 */}
-      {!isInitialLoading && isError && (
+      {/* 에러 */}
+      {!isLoading && isError && (
         <div className="flex flex-col items-center gap-4 py-20 text-white">
           <p className="text-red-400 text-lg">데이터를 불러오지 못했습니다.</p>
           <button
@@ -81,14 +107,10 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* 데이터: 정렬 전환 리패칭 중에는 흐리게 처리 */}
-      {!isInitialLoading && !isError && (
+      {/* 데이터 그리드 */}
+      {!isLoading && !isError && (
         <>
-          <div
-            className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 transition-opacity duration-200 ${
-              isFetching ? 'opacity-50' : 'opacity-100'
-            }`}
-          >
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
             {lps.map((lp) => (
               <LpCard key={lp.id} lp={lp} />
             ))}
@@ -99,6 +121,12 @@ export default function HomePage() {
               표시할 LP가 없습니다.
             </div>
           )}
+
+          {/* IntersectionObserver 트리거 */}
+          <div ref={sentinelRef} className="h-1" />
+
+          {/* 다음 페이지 로딩: 하단 스켈레톤 */}
+          {isFetchingNextPage && <SkeletonGrid count={SKELETON_COUNT_NEXT} />}
         </>
       )}
     </div>

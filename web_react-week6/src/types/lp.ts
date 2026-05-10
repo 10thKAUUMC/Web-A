@@ -56,3 +56,26 @@ export interface LpListResponse {
   nextCursor: number | null;
   hasNext: boolean;
 }
+
+// 댓글 타입
+export interface Comment {
+  id: number;
+  content: string;
+  lpId: number;
+  authorId: number;
+  createdAt: string;
+  updatedAt: string;
+  author: {
+    id: number;
+    name: string;
+    email: string;
+    avatar: string | null;
+  };
+}
+
+// 댓글 목록 응답 타입
+export interface CommentListResponse {
+  data: Comment[];
+  nextCursor: number | null;
+  hasNext: boolean;
+}

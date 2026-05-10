@@ -2,6 +2,21 @@ import { useNavigate } from 'react-router-dom';
 import { type Lp } from '../types/lp';
 import { FaHeart } from 'react-icons/fa';
 
+export function LpCardSkeleton() {
+  return (
+    <div className="relative aspect-square bg-[#1f1f22] rounded overflow-hidden">
+      {/* shimmer sweep */}
+      <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.5s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />
+
+      {/* 하단 정보 영역 힌트 */}
+      <div className="absolute bottom-0 left-0 right-0 p-3 flex flex-col gap-2">
+        <div className="h-3 rounded bg-white/10 w-3/4" />
+        <div className="h-2 rounded bg-white/10 w-1/3" />
+      </div>
+    </div>
+  );
+}
+
 interface LpCardProps {
   lp: Lp;
 }
