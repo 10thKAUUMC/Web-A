@@ -7,7 +7,7 @@ import { type Lp } from '../types/lp';
 
 export default function HomePage() {
   const [order, setOrder] = useState<'desc' | 'asc'>('desc'); 
-  const [search, setSearch] = useState('');
+  const [search] = useState('');
   
   const { 
     data, 
