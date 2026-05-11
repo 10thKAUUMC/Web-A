@@ -9,9 +9,10 @@ import LoginSuccessPage from './pages/LoginSuccessPage';
 import SignupPage from './pages/SignupPage';
 import GoogleLoginRedirectPage from './pages/GoogleLoginRedirectPage';
 import LpDetailPage from './pages/LpDetailPage';
+import MyPage from './pages/MyPage';
 import { AuthProvider } from './context/AuthContext';
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
           {
             path: '/lp/:lpid',
             element: <LpDetailPage />,
+          },
+          {
+            path: '/my',
+            element: <MyPage />,
           },
         ],
       },

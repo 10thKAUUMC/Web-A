@@ -2,14 +2,27 @@ import { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { LuMenu, LuSearch, LuUser } from 'react-icons/lu';
+import { FiX } from 'react-icons/fi';
+import LpWriteModal from '../components/LpWriteModal';
+import { useLogoutMutation, useWithdrawMutation } from '../hooks/mutations/useAuthMutations';
+import useGetMyInfo from '../hooks/queries/useGetMyInfo';
 
 export default function HomeLayout() {
   const navigate = useNavigate();
-  const { accessToken, logout } = useAuth();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { accessToken } = useAuth();
   
-  const userName = localStorage.getItem('userName') || '회원';
+  const { data: me } = useGetMyInfo(!!accessToken);
+  
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isWriteModalOpen, setIsWriteModalOpen] = useState(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  
+  const userName = me?.name || localStorage.getItem('userName') || '회원';
+  
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+
+  const { mutate: logoutMutate } = useLogoutMutation();
+  const { mutate: withdrawMutate } = useWithdrawMutation();
 
   return (
     <div className="flex flex-col h-screen bg-[#0f0f11] text-white overflow-hidden">
@@ -31,7 +44,7 @@ export default function HomeLayout() {
           {accessToken ? (
             <div className="flex items-center gap-4">
               <span className="text-gray-300">{userName}님 반갑습니다.</span>
-              <button onClick={logout} className="text-gray-400 hover:text-white">로그아웃</button>
+              <button onClick={() => logoutMutate()} className="text-gray-400 hover:text-white">로그아웃</button>
             </div>
           ) : (
             <div className="flex gap-3">
@@ -57,7 +70,11 @@ export default function HomeLayout() {
             </button>
           </div>
           <div className="p-6 whitespace-nowrap">
-            <button className="text-gray-500 text-xs hover:text-gray-300">탈퇴하기</button>
+            {accessToken && (
+              <button onClick={() => setIsWithdrawModalOpen(true)} className="text-gray-500 text-xs hover:text-gray-300">
+                탈퇴하기
+              </button>
+            )}
           </div>
         </aside>
 
@@ -74,13 +91,44 @@ export default function HomeLayout() {
 
         {accessToken && (
           <button
-            onClick={() => navigate('/lp/write')}
-            className="fixed bottom-8 right-8 md:bottom-10 md:right-10 w-14 h-14 bg-pink-500 rounded-full flex items-center justify-center text-white text-3xl shadow-lg hover:bg-pink-600 hover:scale-105 transition-all z-50"
+            onClick={() => setIsWriteModalOpen(true)}
+            className="fixed bottom-8 right-8 md:bottom-10 md:right-10 w-14 h-14 bg-pink-500 rounded-full flex items-center justify-center text-white text-3xl shadow-lg hover:bg-pink-600 hover:scale-105 transition-all z-40"
           >
             +
           </button>
         )}
       </div>
+
+      {isWriteModalOpen && (
+        <LpWriteModal onClose={() => setIsWriteModalOpen(false)} />
+      )}
+
+      {isWithdrawModalOpen && (
+        <div className="fixed inset-0 bg-black/70 z-[110] flex items-center justify-center p-4 backdrop-blur-sm">
+          <div className="bg-[#222226] w-full max-w-sm rounded-3xl p-8 relative flex flex-col items-center gap-6 shadow-2xl border border-[#333338]">
+            <button onClick={() => setIsWithdrawModalOpen(false)} className="absolute top-4 right-4 text-gray-400 hover:text-white">
+              <FiX size={20} />
+            </button>
+            
+            <p className="text-lg font-bold text-white mt-4">정말 탈퇴하시겠습니까?</p>
+            
+            <div className="flex gap-4 w-full mt-2">
+              <button 
+                onClick={() => withdrawMutate()}
+                className="flex-1 bg-white text-black font-bold py-3 rounded-xl hover:bg-gray-200 transition-colors"
+              >
+                예
+              </button>
+              <button 
+                onClick={() => setIsWithdrawModalOpen(false)}
+                className="flex-1 bg-pink-500 text-white font-bold py-3 rounded-xl hover:bg-pink-600 transition-colors"
+              >
+                아니오
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
