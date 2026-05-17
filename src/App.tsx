@@ -10,6 +10,7 @@ import SignupPage from './pages/SignupPage';
 import GoogleLoginRedirectPage from './pages/GoogleLoginRedirectPage';
 import LpDetailPage from './pages/LpDetailPage';
 import MyPage from './pages/MyPage';
+import SearchPage from './pages/SearchPage'; // ✨ 추가된 부분
 import { AuthProvider } from './context/AuthContext';
 
 export const queryClient = new QueryClient({
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <HomePage />,
+      },
+      {
+        path: '/search',
+        element: <SearchPage />,
       },
       {
         path: '/login',

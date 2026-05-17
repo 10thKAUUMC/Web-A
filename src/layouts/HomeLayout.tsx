@@ -37,7 +37,10 @@ export default function HomeLayout() {
         </div>
         
         <div className="flex items-center gap-6 text-sm font-semibold">
-          <button className="text-gray-300 hover:text-white hidden sm:block">
+          <button 
+            onClick={() => navigate('/search')} 
+            className="text-gray-300 hover:text-white hidden sm:block"
+          >
             <LuSearch size={20} />
           </button>
           
@@ -62,7 +65,8 @@ export default function HomeLayout() {
           }`}
         >
           <div className="flex-1 p-6 flex flex-col gap-6 mt-2 whitespace-nowrap">
-            <button onClick={() => navigate('/')} className="text-left text-gray-300 hover:text-white flex items-center gap-3 text-sm font-semibold">
+            {/* ✨ 모바일/사이드바 찾기 버튼에 navigate 추가 */}
+            <button onClick={() => navigate('/search')} className="text-left text-gray-300 hover:text-white flex items-center gap-3 text-sm font-semibold">
               <LuSearch size={20} /> 찾기
             </button>
             <button onClick={() => navigate('/my')} className="text-left text-gray-300 hover:text-white flex items-center gap-3 text-sm font-semibold">
