@@ -1,8 +1,8 @@
 import { FaShoppingCart } from 'react-icons/fa';
-import { useAppSelector } from '../hooks/useCustomRedux';
+import usePlaylistStore from '../store/usePlaylistStore';
 
 export default function Navbar() {
-  const amount = useAppSelector((state) => state.cart.amount);
+  const { amount } = usePlaylistStore();
 
   return (
     <nav className="flex items-center justify-between bg-slate-800 px-4 py-4 sm:px-8 sm:py-5 lg:px-12 lg:py-6">

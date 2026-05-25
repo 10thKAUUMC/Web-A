@@ -1,26 +1,19 @@
-import { useAppDispatch, useAppSelector } from '../hooks/useCustomRedux';
-import { closeModal } from '../features/modal/modalSlice';
-import { clearCart } from '../features/cart/cartSlice';
+import usePlaylistStore from '../store/usePlaylistStore';
 
 export default function Modal() {
-  const isOpen = useAppSelector((state) => state.modal.isOpen);
-  const dispatch = useAppDispatch();
+  const { isOpen, closeModal, clearCart } = usePlaylistStore();
 
   if (!isOpen) return null;
 
   const handleConfirm = () => {
-    dispatch(clearCart());
-    dispatch(closeModal());
-  };
-
-  const handleCancel = () => {
-    dispatch(closeModal());
+    clearCart();
+    closeModal();
   };
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
-      onClick={handleCancel}
+      onClick={() => closeModal()}
     >
       <div
         className="w-full max-w-xs rounded-lg bg-white p-6 shadow-xl sm:max-w-sm sm:p-8"
@@ -32,7 +25,7 @@ export default function Modal() {
         <div className="mt-6 flex items-center justify-center gap-3">
           <button
             type="button"
-            onClick={handleCancel}
+            onClick={() => closeModal()}
             className="rounded border border-gray-300 bg-white px-5 py-1.5 text-sm text-gray-800 hover:bg-gray-100"
           >
             아니요

@@ -1,9 +1,7 @@
-import { useAppDispatch, useAppSelector } from '../hooks/useCustomRedux';
-import { openModal } from '../features/modal/modalSlice';
+import usePlaylistStore from '../store/usePlaylistStore';
 
 export default function PriceBox() {
-  const dispatch = useAppDispatch();
-  const { cartItems, total } = useAppSelector((state) => state.cart);
+  const { cartItems, total, openModal } = usePlaylistStore();
 
   if (cartItems.length === 0) return null;
 
@@ -19,7 +17,7 @@ export default function PriceBox() {
       </div>
       <button
         type="button"
-        onClick={() => dispatch(openModal())}
+        onClick={() => openModal()}
         className="rounded border border-gray-400 bg-white px-6 py-2 text-sm text-gray-800 hover:bg-gray-100 sm:px-8 sm:py-2.5 sm:text-base"
       >
         전체 삭제

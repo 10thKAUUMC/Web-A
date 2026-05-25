@@ -2,17 +2,15 @@ import { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import CartList from './components/CartList';
 import PriceBox from './components/PriceBox';
-import { useAppDispatch, useAppSelector } from './hooks/useCustomRedux';
-import { calculateTotals } from './features/cart/cartSlice';
 import Modal from './components/Modal';
+import usePlaylistStore from './store/usePlaylistStore';
 
 export default function App() {
-  const dispatch = useAppDispatch();
-  const cartItems = useAppSelector((state) => state.cart.cartItems);
+  const { cartItems, calculateTotals } = usePlaylistStore();
 
   useEffect(() => {
-    dispatch(calculateTotals());
-  }, [cartItems, dispatch]);
+    calculateTotals();
+  }, [cartItems, calculateTotals]);
 
   return (
     <div className="min-h-screen w-full bg-black px-2 py-4 sm:px-6 sm:py-8 lg:px-10 lg:py-12">

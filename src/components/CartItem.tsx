@@ -1,13 +1,12 @@
 import type { CartItem as CartItemType } from '../types/cart';
-import { useAppDispatch } from '../hooks/useCustomRedux';
-import { increase, decrease } from '../features/cart/cartSlice';
+import usePlaylistStore from '../store/usePlaylistStore';
 
 interface Props {
   item: CartItemType;
 }
 
 export default function CartItem({ item }: Props) {
-  const dispatch = useAppDispatch();
+  const { increase, decrease } = usePlaylistStore();
 
   return (
     <li className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-5 lg:px-10 lg:py-6">
@@ -33,7 +32,7 @@ export default function CartItem({ item }: Props) {
       <div className="flex items-center gap-2 self-end sm:self-auto">
         <button
           type="button"
-          onClick={() => dispatch(decrease(item.id))}
+          onClick={() => decrease(item.id)}
           className="flex h-7 w-7 items-center justify-center rounded border border-gray-300 text-gray-700 hover:bg-gray-100 sm:h-8 sm:w-8 lg:h-9 lg:w-9"
         >
           -
@@ -43,7 +42,7 @@ export default function CartItem({ item }: Props) {
         </span>
         <button
           type="button"
-          onClick={() => dispatch(increase(item.id))}
+          onClick={() => increase(item.id)}
           className="flex h-7 w-7 items-center justify-center rounded border border-gray-300 text-gray-700 hover:bg-gray-100 sm:h-8 sm:w-8 lg:h-9 lg:w-9"
         >
           +

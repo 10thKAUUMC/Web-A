@@ -1,8 +1,8 @@
-import { useAppSelector } from '../hooks/useCustomRedux';
+import usePlaylistStore from '../store/usePlaylistStore';
 import CartItem from './CartItem';
 
 export default function CartList() {
-  const cartItems = useAppSelector((state) => state.cart.cartItems);
+  const { cartItems } = usePlaylistStore();
 
   if (cartItems.length === 0) {
     return (
