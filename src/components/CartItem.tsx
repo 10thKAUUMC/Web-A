@@ -1,6 +1,6 @@
 import type { CartItem as CartItemType } from '../types/cart';
 import { useAppDispatch } from '../hooks/useCustomRedux';
-import { increase, decrease } from '../slices/cartSlice';
+import { increase, decrease } from '../features/cart/cartSlice';
 
 interface Props {
   item: CartItemType;

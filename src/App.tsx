@@ -3,7 +3,8 @@ import Navbar from './components/Navbar';
 import CartList from './components/CartList';
 import PriceBox from './components/PriceBox';
 import { useAppDispatch, useAppSelector } from './hooks/useCustomRedux';
-import { calculateTotals } from './slices/cartSlice';
+import { calculateTotals } from './features/cart/cartSlice';
+import Modal from './components/Modal';
 
 export default function App() {
   const dispatch = useAppDispatch();
@@ -20,6 +21,7 @@ export default function App() {
         <CartList />
         <PriceBox />
       </div>
+      <Modal />
     </div>
   );
 }
