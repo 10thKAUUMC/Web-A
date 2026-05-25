@@ -1,80 +1,25 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import HomeLayout from './layouts/HomeLayout';
-import ProtectedLayout from './layouts/ProtectedLayout';
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import LoginSuccessPage from './pages/LoginSuccessPage';
-import SignupPage from './pages/SignupPage';
-import GoogleLoginRedirectPage from './pages/GoogleLoginRedirectPage';
-import LpDetailPage from './pages/LpDetailPage';
-import MyPage from './pages/MyPage';
-import SearchPage from './pages/SearchPage'; // ✨ 추가된 부분
-import { AuthProvider } from './context/AuthContext';
-
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <HomeLayout />,
-    children: [
-      {
-        path: '/',
-        element: <HomePage />,
-      },
-      {
-        path: '/search',
-        element: <SearchPage />,
-      },
-      {
-        path: '/login',
-        element: <LoginPage />,
-      },
-      {
-        path: '/signup',
-        element: <SignupPage />,
-      },
-      {
-        path: '/google-callback',
-        element: <GoogleLoginRedirectPage />,
-      },
-      {
-        element: <ProtectedLayout />, 
-        children: [
-          {
-            path: '/login-success',
-            element: <LoginSuccessPage />,
-          },
-          {
-            path: '/lp/:lpid',
-            element: <LpDetailPage />,
-          },
-          {
-            path: '/my',
-            element: <MyPage />,
-          },
-        ],
-      },
-    ],
-  },
-]);
+import { useEffect } from 'react';
+import Navbar from './components/Navbar';
+import CartList from './components/CartList';
+import PriceBox from './components/PriceBox';
+import { useAppDispatch, useAppSelector } from './hooks/useCustomRedux';
+import { calculateTotals } from './slices/cartSlice';
 
 export default function App() {
+  const dispatch = useAppDispatch();
+  const cartItems = useAppSelector((state) => state.cart.cartItems);
+
+  useEffect(() => {
+    dispatch(calculateTotals());
+  }, [cartItems, dispatch]);
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <div className="min-h-screen w-full bg-black px-2 py-4 sm:px-6 sm:py-8 lg:px-10 lg:py-12">
+      <div className="mx-auto flex w-full max-w-screen-2xl flex-col overflow-hidden rounded-md bg-white shadow-2xl">
+        <Navbar />
+        <CartList />
+        <PriceBox />
+      </div>
+    </div>
   );
 }
